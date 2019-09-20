@@ -105,6 +105,6 @@ class UserController extends Controller
     public function users()
     {
         $users = User::all();
-        return response()->json(compact('users'), 200);
+        return response()->json($users, 200);
     }
 }
