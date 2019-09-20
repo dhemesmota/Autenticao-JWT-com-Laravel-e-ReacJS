@@ -1,7 +1,8 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import api from '../../services/api';
 import { logout } from '../../services/auth';
-import { parseISO, format, formatRelative, formatDistance } from 'date-fns';
+import { parseISO, formatRelative } from 'date-fns';
+//import { parseISO, format, formatRelative, formatDistance } from 'date-fns';
 import {pt} from 'date-fns/locale';
 
 import NavBar from '../components/NavBar';
@@ -18,26 +19,34 @@ export default function Home({ history}) {
 
         async function handleUsers() {
 
-            const response = await api.get('/users').catch(err => {
-                alert('Sessão inspirou! Faça login novamente.');
-                logout();
-            });
-            //const dados = response.data.json();
-            if (response) {
-                console.log(response.data);
+            try {
+                const response = await api.get('/users');
+                //console.log(response.data);
                 setUsers(response.data);
+
+            } catch (error) {
+                alert('Sua sessão inspirou! Faça login novamente.');
+                logout();
             }
-            
-            await api.get('/user').then(dados => {
-                console.log(dados.data);
+
+        }
+        
+        async function handleUser() {
+
+            try {
+                const dados = await api.get('/user');
+                //console.log(dados.data);
                 setUser(dados.data.user);
-            }).catch(error => {
-                alert(`Error: ${error}`);
-            });
+
+            } catch(error) {
+                alert('Ooops! Ocorreu um erro.')
+            }
+
         }
 
 
         handleUsers();
+        handleUser();
     },[]);
 
     return(
